@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1766900605487,
+      "tag": "0000_lowly_kinsey_walden",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1766901736392,
+      "tag": "0001_wandering_stranger",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1766902917390,
+      "tag": "0002_worthless_tigra",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1766903361117,
+      "tag": "0003_petite_maggott",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+# Criar arquivo
+cat > .gitignore << 'EOF'
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Cache
+.vite/
+.turbo/
+.cache/
+
+# Environment variables
+.env
+.env*.local
+.env.production
+.env.development
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Testing
+coverage/
+
+# Prisma
+prisma/*.db
+prisma/*.db-journal
+
+# Misc
+*.pem
+.vercel
+EOF.env
