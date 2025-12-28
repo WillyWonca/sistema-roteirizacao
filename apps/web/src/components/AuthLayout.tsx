@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 
+// 🆕 import do seletor de idioma
+import { LanguageSwitcher } from "./LanguageSwitcher";
+
 interface AuthLayoutProps {
   title: string;
   subtitle?: string;
@@ -9,7 +12,10 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#05060f] via-[#050916] to-black flex items-center justify-center p-4">
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#05060f] via-[#050916] to-black flex items-center justify-center p-4 relative">
+      {/* 🌍 seletor de idioma no topo */}
+      <LanguageSwitcher />
+
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
