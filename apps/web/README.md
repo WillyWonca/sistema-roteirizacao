@@ -1,73 +1,144 @@
-# React + TypeScript + Vite
+# 🚀 Sistema de Roteirização
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Monorepo contendo **API (NestJS + Prisma)** e **Frontend Web (React)** para gestão e roteirização de operações.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📂 Estrutura do projeto
 
-## React Compiler
+sistema-roteirizacao/
+│
+├── apps/
+│ ├── api/ → backend (NestJS + Prisma)
+│ └── web/ → frontend (React)
+│
+├── prisma/ → schema e migrations
+└── package.json → scripts principais do monorepo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+yaml
+Copiar código
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🧰 Tecnologias principais
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js
+- NestJS
+- Prisma ORM
+- React
+- TypeScript
+- Monorepo (workspaces)
+- PostgreSQL (padrão para Prisma)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## ⚙️ Pré-requisitos
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Node.js LTS
+- npm, yarn ou pnpm
+- Banco PostgreSQL (local ou Docker)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🔐 Variáveis de ambiente
+
+Crie os arquivos:
+
+apps/api/.env
+apps/web/.env
+
+yaml
+Copiar código
+
+Exemplo API:
+
+DATABASE_URL="postgresql://user:password@localhost:5432/sistema"
+PORT=3001
+
+yaml
+Copiar código
+
+**Importante:** `.env` já está ignorado no Git.
+
+---
+
+## ▶️ Como rodar o projeto
+
+### 1) Instalar dependências (monorepo inteiro)
+
+npm install
+
+ou
+yarn
+
+shell
+Copiar código
+
+### 2) Rodar migrations do Prisma
+
+npx prisma migrate dev
+
+shell
+Copiar código
+
+### 3) Rodar backend
+
+cd apps/api
+npm run start:dev
+
+nginx
+Copiar código
+
+API padrão:
+http://localhost:3001
+
+shell
+Copiar código
+
+### 4) Rodar frontend
+
+cd apps/web
+npm start
+
+rust
+Copiar código
+
+ou se for Vite:
+
+npm run dev
+
+nginx
+Copiar código
+
+Frontend padrão:
+http://localhost:3000
+
+yaml
+Copiar código
+
+---
+
+## 🛠️ Scripts úteis
+
+npm run lint
+npm run format
+npm run build
+
+yaml
+Copiar código
+
+---
+
+## 🗺️ Roadmap resumido
+
+- [ ] Autenticação
+- [ ] Integração mapas/rotas
+- [ ] Dashboard operacional
+- [ ] Importação de planilhas
+- [ ] Otimização de rotas
+
+---
+
+## 🧾 Licença
+
+Projeto privado / uso interno.
