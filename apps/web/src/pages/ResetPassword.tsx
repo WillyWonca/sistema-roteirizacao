@@ -1,5 +1,6 @@
+// apps/web/src/pages/ResetPassword.tsx
 import { useState, type FormEvent } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { AuthLayout } from "../components/AuthLayout";
 import { PasswordField } from "../components/ui/PasswordField";
 import { Button } from "../components/ui/Button";
@@ -10,37 +11,48 @@ const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3333";
 export function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [params] = useSearchParams();
+  const navigate = useNavigate();
 
-  const tokenFromUrl = params.get("token") ?? "";
+  // token vindo do e-mail
+  const initialToken = params.get("token") ?? "";
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const fd = new FormData(e.currentTarget);
 
+    const token = initialToken || String(fd.get("token") || "").trim();
     const password = String(fd.get("password") || "").trim();
-    const confirm = String(fd.get("confirm") || "").trim();
-
-    const token =
-      tokenFromUrl || String(fd.get("token") || "").trim();
+    const confirmPassword = String(fd.get("confirmPassword") || "").trim();
 
     if (!token) {
       toast.error("Token não encontrado.");
       return;
     }
 
-    if (!password || !confirm) {
-      toast.error("Preencha os dois campos de senha.");
+    if (!password || !confirmPassword) {
+      toast.error("Informe e confirme a nova senha.");
       return;
     }
 
-    if (password !== confirm) {
+    if (password !== confirmPassword) {
       toast.error("As senhas não conferem.");
       return;
     }
 
+    const isStrong =
+      password.length >= 8 &&
+      /[a-z]/.test(password) &&
+      /[A-Z]/.test(password) &&
+      /\d/.test(password);
+
+    if (!isStrong) {
+      toast.error("Senha fraca. Use maiúscula, minúscula e número.");
+      return;
+    }
+
     setLoading(true);
-    const t = toast.loading("Redefinindo sua senha...");
+    const t = toast.loading("Redefinindo senha...");
 
     try {
       const res = await fetch(`${API_URL}/auth/reset-password`, {
@@ -53,9 +65,10 @@ export function ResetPassword() {
 
       if (!res.ok) throw new Error(data?.error ?? "Erro ao redefinir senha.");
 
-      toast.success("Senha alterada com sucesso! Faça login novamente.", {
-        id: t,
-      });
+      toast.success("Senha redefinida! Faça login novamente.", { id: t });
+
+      navigate("/");
+
     } catch (err: any) {
       toast.error(err.message ?? "Erro inesperado.", { id: t });
     } finally {
@@ -66,15 +79,18 @@ export function ResetPassword() {
   return (
     <AuthLayout
       title="Redefinir senha"
-      subtitle="Crie uma nova senha para continuar."
+      subtitle="Defina uma nova senha para continuar"
     >
       <form className="space-y-5" onSubmit={handleSubmit}>
-        {!tokenFromUrl && (
-          <PasswordField
-            name="token"
-            label="Token"
-            placeholder="Cole o token recebido"
-          />
+        {!initialToken && (
+          <div>
+            <label className="text-sm text-slate-200">Token</label>
+            <input
+              name="token"
+              className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white"
+              placeholder="Cole o token enviado por e-mail"
+            />
+          </div>
         )}
 
         <PasswordField
@@ -85,14 +101,14 @@ export function ResetPassword() {
         />
 
         <PasswordField
-          name="confirm"
+          name="confirmPassword"
           label="Confirmar nova senha"
           placeholder="Repita a nova senha"
           autoComplete="new-password"
         />
 
         <Button type="submit" disabled={loading}>
-          {loading ? "Redefinindo..." : "Redefinir senha"}
+          {loading ? "Salvando..." : "Redefinir senha"}
         </Button>
       </form>
 

@@ -1,0 +1,89 @@
+services:
+
+  postgres:
+    image: postgis/postgis:16-3.5
+    container_name: pg-roteirizacao
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: roteirizacao
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  osrm:
+    build:
+      context: ./docker/osrm
+    container_name: osrm
+    platform: linux/amd64
+    volumes:
+      - ./docker/osrm/data:/data
+    environment:
+      OSRM_PBF: brazil.osm.pbf
+      OSRM_DATA_BASENAME: brazil
+      OSRM_ALGORITHM: mld
+    ports:
+      - "5100:5000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 60
+
+  nominatim:
+    image: mediagis/nominatim:4.4
+    container_name: nominatim
+    platform: linux/amd64
+    restart: unless-stopped
+    environment:
+      PBF_PATH: /data/brazil.osm.pbf
+      IMPORT_STYLE: full
+    volumes:
+      - ./docker/osrm/data:/data
+      - nominatim-data:/var/lib/postgresql/14/main
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 60
+
+  api:
+    build: ./apps/api
+    container_name: api
+    depends_on:
+      postgres:
+        condition: service_started
+      osrm:
+        condition: service_healthy
+      nominatim:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/roteirizacao
+      JWT_SECRET: devsecret
+      OSRM_BASE_URL: http://osrm:5000
+      NOMINATIM_URL: http://nominatim:8080
+      FRONTEND_URL: http://localhost:5173
+    ports:
+      - "3333:3333"
+    restart: unless-stopped
+
+  web:
+    build: ./apps/web
+    container_name: web
+    depends_on:
+      api:
+        condition: service_started
+    environment:
+      VITE_API_URL: http://localhost:3333
+    ports:
+      - "5173:5173"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  nominatim-data:

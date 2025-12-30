@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function sendResetEmail(to: string, token: string) {
   const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-  const link = `${frontendUrl}/reset-password?token=${token}`;
+const link = `${process.env.FRONTEND_URL}/reset-password?token=${encodeURIComponent(token)}`;
 
   const from = process.env.FROM_EMAIL || "onboarding@resend.dev";
 
