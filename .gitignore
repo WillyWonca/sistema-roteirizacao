@@ -53,3 +53,29 @@ prisma/dev.db-journal
 .yarn/unplugged/
 .yarn/build-state.yml
 .yarn/install-state.gz
+
+# -------------------------
+# OSRM DATA (large files)
+# -------------------------
+docker/osrm/data/*.pbf
+docker/osrm/data/*.osrm
+docker/osrm/data/*.osrm.*
+docker/osrm/data/*.hsgr
+docker/osrm/data/*.nodes
+docker/osrm/data/*.ramIndex
+docker/osrm/data/*.fileIndex
+docker/osrm/data/*.timestamp
+docker/osrm/data/*.edges
+docker/osrm/data/*.geometry
+docker/osrm/data/*.names
+docker/osrm/data/*.icd
+docker/osrm/data/*.restrictions
+docker/osrm/data/*
+!docker/osrm/data/.gitkeep
+
+# -------------------------
+# docker volumes / misc
+# -------------------------
+docker-data/
+volumes/
+*.tar
